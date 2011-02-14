@@ -19,3 +19,5 @@ Jeweler::Tasks.new do |gem|
   gem.add_dependency 'base64'
   gem.add_dependency 'uri'
 end
+
+Jeweler::RubygemsDotOrgTasks.new
