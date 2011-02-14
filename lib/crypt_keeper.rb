@@ -1,4 +1,5 @@
 module CryptKeeper
+  VERSION = "0.1.0"
   class Connection
     def initialize(*args)
       options = {}
