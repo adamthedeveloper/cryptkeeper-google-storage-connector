@@ -1,0 +1,11 @@
+= CryptKeeper
+
+Rails gem for connecting to the Google Storage API
+
+== Install
+
+    gem install cryptkeeper
+
+== Usage
+
+    Coming soon.
