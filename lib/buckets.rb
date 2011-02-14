@@ -3,12 +3,56 @@ module Buckets
   # lists all of the buckets that you own
   # return an array of Bucket objects
   def buckets
+    Hpricot(get("/")).search("bucket").map do |el|
+      hsh = {
+        :name => el.search("name").inner_html,
+        :created_at => el.search("creationdate").inner_html
+      }
+      Bucket.new(hsh)
+    end
+  end
+
+  # GET Bucket
+  # lists the contents of a bucket or retrieves the ACLs that are
+  # applied to a bucket.
+  # return an array of BucketObjects
+  def bucket_objects(bucket_name, *args)
+    options = {
+        :delimeter => nil,
+        :marker    => nil,
+        :max_keys  => nil,
+        :prefix    => nil
+    }
+    options.merge!(args.pop) if args.last.is_a? Hash
+
+    path = "?"
+    path << "delimeter=#{options[:delimeter]}&" if !options[:delimeter].nil?
+    path << "marker=#{options[:marker]}&" if !options[:marker].nil?
+    path << "max-keys=#{options[:max_keys]}&" if !options[:max_keys].nil?
+    path << "prefix=#{options[:prefix]}&" if !options[:prefix].nil?
+
+    hpr = Hpricot(get(path, bucket_name))
+    obj_hashes = hpr.search("object").map do |el|
+      {
+          :name => '',
+          :something => '',
+          :another => ''
+      }
+    end
+    obj_hashes.map { |obj| BucketObject.new(obj) }
+  end
+
+  def create_bucket(*args)
+    
+  end
+
+  def get(path, bucket_name='')
     res = nil
     time = request_time
     Net::HTTP.start(@host[:address]) do |http|
 
-      req = Net::HTTP::Get.new("/")
-      req.add_field('Host', @host[:address])
+      req = Net::HTTP::Get.new(path)
+      req.add_field('Host', "#{bucket_name}#{@host[:address]}")
       req.add_field('Date', time)
       req.add_field('Content-Length',0)
 
@@ -17,28 +61,7 @@ module Buckets
       req.add_field('Authorization', "#{@signature_id} #{@access_key}:#{sig}")
       res = http.request(req)
     end
-
-    hpr = Hpricot(res.body)
-    bucket_hashes = hpr.search("bucket").map do |el|
-      {
-        :name => el.search("name").inner_html,
-        :created_at => el.search("creationdate").inner_html
-      }
-    end
-
-    bucket_hashes.collect { |h| Bucket.new(h) }
-  end
-
-  # GET Bucket
-  # lists the contents of a bucket or retrieves the ACLs that are
-  # applied to a bucket.
-  # return a Bucket object
-  def bucket(*args)
-
-  end
-
-  def create_bucket(*args)
-    
+    res.body
   end
 
   class Bucket
@@ -59,6 +82,12 @@ module Buckets
     end
 
     def destroy
+
+    end
+  end
+
+  class BucketObject
+    def initialize(*args)
 
     end
   end
