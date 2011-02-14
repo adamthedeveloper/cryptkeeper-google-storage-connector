@@ -13,7 +13,6 @@ Jeweler::Tasks.new do |gem|
 
   # Dependencies
   gem.add_dependency 'hpricot'
-  gem.add_dependency 'net/http'
   gem.add_dependency 'iconv'
   gem.add_dependency 'hmac-sha1'
   gem.add_dependency 'base64'
