@@ -14,7 +14,7 @@ Jeweler::Tasks.new do |gem|
   # Dependencies
   gem.add_dependency 'hpricot'
   gem.add_dependency 'iconv'
-  gem.add_dependency 'hmac-sha1'
+  gem.add_dependency 'ruby-hmac'
   gem.add_dependency 'base64'
   gem.add_dependency 'uri'
 end
