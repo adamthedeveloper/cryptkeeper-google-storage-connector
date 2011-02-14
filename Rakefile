@@ -15,8 +15,6 @@ Jeweler::Tasks.new do |gem|
   gem.add_dependency 'hpricot'
   gem.add_dependency 'iconv'
   gem.add_dependency 'ruby-hmac'
-  gem.add_dependency 'base64'
-  gem.add_dependency 'uri'
 end
 
 Jeweler::RubygemsDotOrgTasks.new
