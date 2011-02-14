@@ -8,7 +8,7 @@ require 'uri'
 require 'hpricot'
 
 module CryptKeeper
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
   class Connection
     def initialize(*args)
       options = {
