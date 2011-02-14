@@ -37,21 +37,15 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<hpricot>, [">= 0"])
       s.add_runtime_dependency(%q<iconv>, [">= 0"])
       s.add_runtime_dependency(%q<ruby-hmac>, [">= 0"])
-      s.add_runtime_dependency(%q<base64>, [">= 0"])
-      s.add_runtime_dependency(%q<uri>, [">= 0"])
     else
       s.add_dependency(%q<hpricot>, [">= 0"])
       s.add_dependency(%q<iconv>, [">= 0"])
       s.add_dependency(%q<ruby-hmac>, [">= 0"])
-      s.add_dependency(%q<base64>, [">= 0"])
-      s.add_dependency(%q<uri>, [">= 0"])
     end
   else
     s.add_dependency(%q<hpricot>, [">= 0"])
     s.add_dependency(%q<iconv>, [">= 0"])
     s.add_dependency(%q<ruby-hmac>, [">= 0"])
-    s.add_dependency(%q<base64>, [">= 0"])
-    s.add_dependency(%q<uri>, [">= 0"])
   end
 end
 
