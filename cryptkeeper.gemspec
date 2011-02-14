@@ -35,14 +35,12 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<hpricot>, [">= 0"])
-      s.add_runtime_dependency(%q<net/http>, [">= 0"])
       s.add_runtime_dependency(%q<iconv>, [">= 0"])
       s.add_runtime_dependency(%q<hmac-sha1>, [">= 0"])
       s.add_runtime_dependency(%q<base64>, [">= 0"])
       s.add_runtime_dependency(%q<uri>, [">= 0"])
     else
       s.add_dependency(%q<hpricot>, [">= 0"])
-      s.add_dependency(%q<net/http>, [">= 0"])
       s.add_dependency(%q<iconv>, [">= 0"])
       s.add_dependency(%q<hmac-sha1>, [">= 0"])
       s.add_dependency(%q<base64>, [">= 0"])
@@ -50,7 +48,6 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<hpricot>, [">= 0"])
-    s.add_dependency(%q<net/http>, [">= 0"])
     s.add_dependency(%q<iconv>, [">= 0"])
     s.add_dependency(%q<hmac-sha1>, [">= 0"])
     s.add_dependency(%q<base64>, [">= 0"])
