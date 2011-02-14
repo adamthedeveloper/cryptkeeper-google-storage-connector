@@ -8,4 +8,7 @@ Rails gem for connecting to the Google Storage API
 
 == Usage
 
-    Coming soon.
+    So far:
+
+    keeper = CryptKeeper::Connection({:access_key => 'your_access_key', :secret_key => 'your_secret_key'})
+    my_buckets = keeper.buckets
