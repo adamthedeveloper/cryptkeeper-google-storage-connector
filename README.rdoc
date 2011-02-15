@@ -8,32 +8,32 @@ Rails gem for connecting to the Google Storage API
 
 == Usage
 
-    So far:
+So far:
 
     keeper = CryptKeeper::Connection.new({:access_key => 'your_access_key', :secret_key => 'your_secret_key'})
 
-# See all of my buckets
-puts keeper.buckets.each do |bucket|
-  puts bucket.name
-  puts bucket.created_at
-end
+See all of my buckets
+    puts keeper.buckets.each do |bucket|
+        puts bucket.name
+        puts bucket.created_at
+    end
 
-# Search for all files that start with "Picture"
-# The following returns meta info on each of the found objects within the specified bucket
-metas = keeper.bucket_meta_objects('adam_first_bucket', {:prefix => 'Picture'})
+Search for all files that start with "Picture"
+The following returns meta info on each of the found objects within the specified bucket
+    metas = keeper.bucket_meta_objects('adam_first_bucket', {:prefix => 'Picture'})
 
-# Now it's time to grab the actual object (data)
-# I am writing it to Files here on my local machine
-metas.each do |meta|
-  puts meta.key # In my case, prints Picture 1.png
-  f = File.new("/Users/user/Desktop/#{meta.key}",'w')
-  # object method will go and fetch it unless it's been fetched before
-  # if you want to force another trip to the Crypt, do meta.object!
-  f.write(meta.object)
-  f.close()
-end
+Now it's time to grab the actual object (data)
+I am writing it to Files here on my local machine
+    metas.each do |meta|
+        puts meta.key # In my case, prints Picture 1.png
+        f = File.new("/Users/user/Desktop/#{meta.key}",'w')
+        # object method will go and fetch it unless it's been fetched before
+        # if you want to force another trip to the Crypt, do meta.object!
+        f.write(meta.object)
+        f.close()
+    end
 
 Creates 3 new picture files on my Desktop:
-Picture 1.png
-Picture 2.png
+Picture 1.png,
+Picture 2.png,
 Picture 3.png
