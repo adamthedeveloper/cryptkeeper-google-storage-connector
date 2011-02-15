@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{cryptkeeper}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Medeiros"]
-  s.date = %q{2011-02-14}
+  s.date = %q{2011-02-15}
   s.description = %q{Use cryptkeeper to talk to Google Storage}
   s.email = %q{adammede@gmail.com}
   s.extra_rdoc_files = [
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "cryptkeeper.gemspec",
     "lib/buckets.rb",
     "lib/crypt_keeper.rb",
+    "lib/crypt_keeper_http.rb",
     "lib/objects.rb"
   ]
   s.homepage = %q{http://github.com/adamthedeveloper/cryptkeeper}
