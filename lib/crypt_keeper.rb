@@ -4,7 +4,7 @@ require ck_path + '/crypt_keeper_http.rb'
 require 'uri'
 
 module CryptKeeper
-  VERSION = "0.2.2"
+  VERSION = "0.2.3"
   class Connection
     @@http_instance = nil
     def self.http_instance
