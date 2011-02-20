@@ -1,16 +1,37 @@
 require 'hpricot'
+require 'digest/md5'
 module Buckets
+
+  # Bucket stuff
   # GET Service
   # lists all of the buckets that you own
   # return an array of Bucket objects
   def buckets
-    Hpricot(CryptKeeper::Connection.http_instance.get("/")).search("bucket").map do |el|
-      hsh = {
-          :name       => el.search("name").inner_html,
-          :created_at => el.search("creationdate").inner_html
-      }
-      Bucket.new(hsh)
+    find_buckets
+  end
+
+  def connection
+    CryptKeeper::Connection.http_instance
+  end
+
+  def create_bucket(*args)
+    options = args.last
+    connection.put("/", options[:name])
+    find_buckets(options)
+  end
+
+  def find_buckets(*args)
+    options = args.last
+    name = options[:name] if options.is_a? Hash
+    buckets = Hpricot(connection.get("/")).search("bucket").map do |el|
+      Bucket.new(
+          {
+              :name => el.search("name").inner_html,
+              :created_at => el.search("creationdate").inner_html
+          }
+      )
     end
+    name.nil? ? buckets : buckets.reject { |bucket| bucket.name != name }[0]
   end
 
   # GET Bucket
@@ -33,7 +54,7 @@ module Buckets
     path << "prefix=#{options[:prefix]}&" if !options[:prefix].nil?
     path.gsub!(/[&]$/, '')
 
-    hpr        = Hpricot(CryptKeeper::Connection.http_instance.get(path, bucket_name))
+    hpr        = Hpricot(connection.get(path, bucket_name))
     obj_hashes = hpr.search("contents").map do |el|
       {
           :bucket_name        => bucket_name,
@@ -49,13 +70,13 @@ module Buckets
     obj_hashes.map { |obj| BucketMetaObject.new(obj) }
   end
 
-  def create_bucket(*args)
-
+  class Utils
+    def connection
+      CryptKeeper::Connection.http_instance
+    end
   end
 
-
-
-  class Bucket
+  class Bucket < Utils
     attr_accessor :name, :created_at
 
     def initialize(*args)
@@ -65,16 +86,26 @@ module Buckets
       @created_at = options[:created_at]
     end
 
-    def create(*args)
-
+    def delete(options={})
+      connection.delete("/", @name)
     end
 
     def update(*args)
 
     end
+
+    def add_object(name, data, content_type='binary/octet-stream', *args)
+      data.rewind
+      additional_headers = {
+          'Content-MD5' => Base64.encode64(Digest::MD5.digest(data.read)).strip,
+          'Content-Type' => content_type
+      }
+      additional_headers.merge!(args.pop) if args.last.is_a? Hash
+      connection.put("/#{URI.escape(name)}", @name, data, additional_headers)
+    end
   end
 
-  class BucketMetaObject
+  class BucketMetaObject < Utils
     attr_accessor :properties,
                   :key, :last_modified, :e_tag, :size, :storage_class,
                   :owner_id, :owner_display_name,
@@ -97,7 +128,11 @@ module Buckets
     end
 
     def object!
-      CryptKeeper::Connection.http_instance.get("/#{URI.escape(@key)}", @bucket_name)
+      connection.get("/#{URI.escape(@key)}", @bucket_name)
+    end
+
+    def delete
+      connection.delete("/#{URI.escape(@key)}", @bucket_name)
     end
   end
 end

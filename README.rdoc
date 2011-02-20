@@ -37,3 +37,16 @@ Creates 3 new picture files on my Desktop:
 Picture 1.png,
 Picture 2.png,
 Picture 3.png
+
+Add a new object to a bucket
+    new_bucket = keeper.create_bucket({:name => "adam_new_bucket3"})
+
+    data = File.open("/Users/user/Desktop/Picture 3.png", "rb")
+    new_bucket.add_object('Picture 5.png', data, 'image/png')
+
+    data = File.open("/Users/user/Desktop/text_file.txt", 'r')
+    new_bucket.add_object("myTextFile.txt", data) # if you don't specify a content type, binary/octet-stream is used
+
+Delete an object
+    keeper.bucket_meta_objects('adam_new_bucket3', {:prefix => 'Picture%205.png'}).first.delete
+
