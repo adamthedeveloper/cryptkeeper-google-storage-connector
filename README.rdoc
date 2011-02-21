@@ -47,6 +47,17 @@ Add a new object to a bucket
     data = File.open("/Users/user/Desktop/text_file.txt", 'r')
     new_bucket.add_object("myTextFile.txt", data) # if you don't specify a content type, binary/octet-stream is used
 
+Copy an object from one bucket to another
+    # Fetch an object
+    my_object = keeper.bucket_meta_objects('adam_new_bucket3', {:prefix => 'Picture%205.png'}).first
+
+    # Copy an object to another bucket
+    my_object.copy_to 'adam_first_bucket' # copy to a different bucket and keep the path intact
+    my_object.copy_to 'adam_new_bucket', 'path_1/path_2/path_3/Picture5.png' # copy to a different bucket and path
+
+Delete an object
+    my_object.delete
+
 Delete an object
     keeper.bucket_meta_objects('adam_new_bucket3', {:prefix => 'Picture%205.png'}).first.delete
 

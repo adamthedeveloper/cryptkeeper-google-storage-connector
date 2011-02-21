@@ -2,7 +2,6 @@ require 'hpricot'
 require 'digest/md5'
 module Buckets
 
-  # Bucket stuff
   # GET Service
   # lists all of the buckets that you own
   # return an array of Bucket objects
@@ -10,16 +9,21 @@ module Buckets
     find_buckets
   end
 
+  # returns the connection object that was initialized
   def connection
     CryptKeeper::Connection.http_instance
   end
 
+  # create a bucket. Takes a Hash as it's argument
+  # {:name => 'my_new_bucket_name'}
   def create_bucket(*args)
     options = args.last
     connection.put("/", options[:name])
     find_buckets(options)
   end
 
+  # search for buckets by name
+  # {:name => 'my_bucket_name'}
   def find_buckets(*args)
     options = args.last
     name = options[:name] if options.is_a? Hash
@@ -37,7 +41,13 @@ module Buckets
   # GET Bucket
   # lists the contents of a bucket or retrieves the ACLs that are
   # applied to a bucket.
-  # return an array of BucketObjects
+  # returns an array of BucketMetaObjects
+  # takes a bucket name and hash for options.
+  # Possible keys for the hash are
+  # * :delimeter
+  # * :marker
+  # * :max_keys
+  # * :prefix
   def bucket_meta_objects(bucket_name, *args)
     options = {
         :delimeter => nil,
@@ -70,12 +80,16 @@ module Buckets
     obj_hashes.map { |obj| BucketMetaObject.new(obj) }
   end
 
+  # Utils class
   class Utils
+
+    # returns a connection instance
     def connection
       CryptKeeper::Connection.http_instance
     end
   end
 
+  # Bucket
   class Bucket < Utils
     attr_accessor :name, :created_at
 
@@ -86,14 +100,19 @@ module Buckets
       @created_at = options[:created_at]
     end
 
+    # Delete this bucket if it's empty
     def delete(options={})
       connection.delete("/", @name)
     end
 
-    def update(*args)
+    #
+    #def update(*args)
 
-    end
+    #end
 
+    # add an object to this bucket
+    # pass in a name, a File or IO object, it's content type and a hash
+    # containing additional headers (keys and values)
     def add_object(name, data, content_type='binary/octet-stream', *args)
       data.rewind
       additional_headers = {
@@ -105,6 +124,8 @@ module Buckets
     end
   end
 
+  # BucketMetaObject
+  # Contains information about an object
   class BucketMetaObject < Utils
     attr_accessor :properties,
                   :key, :last_modified, :e_tag, :size, :storage_class,
@@ -123,16 +144,26 @@ module Buckets
       @owner_display_name = @properties[:owner_display_name]
     end
 
+    # When called, returns the previously set data of the object. If the object data
+    # hasn't been set, it will go fetch it from Google Storage and set it as an instance
+    # variable to be returned next time.
     def object
       @object ||= object!
     end
 
+    # Forces retrieval of the object data from Google Storage.
     def object!
       connection.get("/#{URI.escape(@key)}", @bucket_name)
     end
 
+    # Deletes the object from the bucket.
     def delete
       connection.delete("/#{URI.escape(@key)}", @bucket_name)
+    end
+
+    def copy_to(bucket_name, path=nil)
+      path = path.nil? ? "/#{URI.escape(@key)}" : "/#{URI.escape(path)}"
+      connection.put(path, bucket_name, nil, {'x-goog-copy-source' => "#{@bucket_name}/#{URI.escape(@key)}"})
     end
   end
 end

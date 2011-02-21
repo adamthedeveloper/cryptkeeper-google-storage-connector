@@ -4,7 +4,17 @@ require ck_path + '/crypt_keeper_http.rb'
 require 'uri'
 
 module CryptKeeper
-  VERSION = "0.2.5"
+  VERSION = "0.2.6"
+
+  # :title: Connection
+  # Author:: Adam R. Medeiros (AKA: ScaryThings)
+  # License:: MIT Style
+
+  # Builds the connection to Google Storage with the credentials
+  # passed in.
+
+  # For example:
+  # keeper = CryptKeeper::Connection.new({:access_key => 'your_access_key', :secret_key => 'your_secret_key'})
   class Connection
     @@http_instance = nil
     def self.http_instance

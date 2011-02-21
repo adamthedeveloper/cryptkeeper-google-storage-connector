@@ -48,10 +48,12 @@ class CryptKeeperHttp
 
       content_md5 = ''
       content_type = ''
+      x_headers = ''
 
       if !additional_headers.empty?
         additional_headers.each do |k, v|
           req.add_field(k, v)
+          x_headers << "#{k}:#{v}\n" if k[0..5] == "x-goog"
           if type==PUT
             case k
               when 'Content-MD5'
@@ -80,7 +82,7 @@ class CryptKeeperHttp
       req.add_field('Host', "#{bucket_name}#{@address}")
       req.add_field('Date', time)
       req.add_field('Content-length', content_length)
-      sig = "#{type}\n#{content_md5}\n#{content_type}\n#{time}\n#{sig_path}"
+      sig = "#{type}\n#{content_md5}\n#{content_type}\n#{time}\n#{x_headers}#{sig_path}"
       req.add_field('Authorization', "#{@signature_id} #{@access_key}:#{signature(sig)}")
 
       res = http.request(req)
