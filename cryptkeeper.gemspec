@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     "lib/crypt_keeper_http.rb",
     "lib/objects.rb"
   ]
-  s.homepage = %q{http://github.com/adamthedeveloper/cryptkeeper}
+  s.homepage = %q{http://github.com/adamthedeveloper/cryptkeeper-google-storage-connector}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Google Storage Connector}
