@@ -7,7 +7,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Google Storage Connector}
   gem.description = %Q{Use cryptkeeper to talk to Google Storage}
   gem.email = "adammede@gmail.com"
-  gem.homepage = "http://github.com/adamthedeveloper/cryptkeeper"
+  gem.homepage = "http://github.com/adamthedeveloper/cryptkeeper-google-storage-connector"
   gem.authors = ["Adam Medeiros"]
   gem.version = CryptKeeper::VERSION
 
