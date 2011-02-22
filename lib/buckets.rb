@@ -65,19 +65,20 @@ module Buckets
     path.gsub!(/[&]$/, '')
 
     hpr        = Hpricot(connection.get(path, bucket_name))
-    obj_hashes = hpr.search("contents").map do |el|
-      {
-          :bucket_name        => bucket_name,
-          :key                => el.search("key").inner_html,
-          :last_modified      => el.search("lastmodified").inner_html,
-          :e_tag              => el.search("etag").inner_html,
-          :size               => el.search("size").inner_html,
-          :storage_class      => el.search("storageclass").inner_html,
-          :owner_id           => el.search("id").inner_html,
-          :owner_display_name => el.search("displayname").inner_html
-      }
+    hpr.search("contents").map do |el|
+      BucketMetaObject.new(
+          {
+              :bucket_name => bucket_name,
+              :key => el.search("key").inner_html,
+              :last_modified => el.search("lastmodified").inner_html,
+              :e_tag => el.search("etag").inner_html,
+              :size => el.search("size").inner_html,
+              :storage_class => el.search("storageclass").inner_html,
+              :owner_id => el.search("id").inner_html,
+              :owner_display_name => el.search("displayname").inner_html
+          }
+      )
     end
-    obj_hashes.map { |obj| BucketMetaObject.new(obj) }
   end
 
   # Utils class
@@ -162,7 +163,7 @@ module Buckets
     end
 
     def copy_to(bucket_name, path=nil)
-      path = path.nil? ? "/#{URI.escape(@key)}" : "/#{URI.escape(path)}"
+      path = "/#{path.nil? ? URI.escape(@key) : URI.escape(path)}"
       connection.put(path, bucket_name, nil, {'x-goog-copy-source' => "#{@bucket_name}/#{URI.escape(@key)}"})
     end
   end

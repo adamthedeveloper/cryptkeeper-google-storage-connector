@@ -1,5 +1,4 @@
 require 'net/http'
-require 'iconv'
 require 'hmac-sha1'
 require 'base64'
 class CryptKeeperHttp
@@ -19,9 +18,8 @@ class CryptKeeperHttp
   end
 
   def signature(message)
-    ic_utf8 = Iconv.new('ascii//TRANSLIT//IGNORE', 'UTF-8')
-    utf8_message = ic_utf8.iconv(message)
-    utf8_key = ic_utf8.iconv(@secret_key)
+    utf8_message = message.unpack("C*").pack("U*")
+    utf8_key = @secret_key.unpack("C*").pack("U*")
     sha1 = HMAC::SHA1.digest(utf8_key, utf8_message)
     Base64.encode64(sha1).strip
   end

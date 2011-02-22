@@ -6,6 +6,10 @@ Rails gem for connecting to the Google Storage API
 
     gem install cryptkeeper
 
+Depending upon how your environment is set up, you may also need:
+
+    require 'crypt_keeper'
+
 == Usage
 
 So far:
