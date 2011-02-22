@@ -4,7 +4,7 @@ require ck_path + '/crypt_keeper_http.rb'
 require 'uri'
 
 module CryptKeeper
-  VERSION = "0.2.7"
+  VERSION = "0.2.8"
 
   # :title: Connection
   # Author:: Adam R. Medeiros (AKA: ScaryThings)
